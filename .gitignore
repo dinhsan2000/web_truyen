@@ -3,6 +3,9 @@
 /public/storage
 /storage/*.key
 /vendor
+/docker/nginx-log
+/docker/php-fpm
+/docker/mysql
 .env
 .env.backup
 .phpunit.result.cache
