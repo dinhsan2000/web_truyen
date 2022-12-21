@@ -21,6 +21,7 @@ class CreateStoriesTable extends Migration
             $table->string('source');
             $table->string('image');
             $table->bigInteger('user_id');
+            $table->bigInteger('author_id');
             $table->string('keyword');
             $table->text('description');
             $table->string('slug');

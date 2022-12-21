@@ -62,11 +62,6 @@
                                                id="exampleInputPassword1">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputPassword1">Slug</label>
-                                        <input type="text" name="slug" class="form-control"
-                                            id="exampleInputPassword1">
-                                    </div>
-                                    <div class="form-group">
                                         <label for="exampleInputPassword1">Nguồn</label>
                                         <input type="text" name="source" class="form-control"
                                             id="exampleInputPassword1">

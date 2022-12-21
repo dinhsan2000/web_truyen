@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\MessageStatus;
 use App\Models\Categories;
+use App\Models\Story_Categories;
+use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
 {
@@ -18,7 +20,7 @@ class CategoriesController extends Controller
     public function index()
     {
         $categories = Categories::where('status', 1)->get();
-        return view('admin.categories.category',compact('categories'));
+        return view('admin.categories.category', compact('categories'));
     }
 
     /**
@@ -46,17 +48,23 @@ class CategoriesController extends Controller
             'alias' => ['string', 'nullable'],
             'description' => ['required', 'string'],
             'keyword' => ['required', 'string'],
-            'slug' => ['required', 'string'],
             'status' => ['boolean', 'string']
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return MessageStatus::displayInvalidInput($validator);
         }
 
-        Categories::create($data);
+        $categories = Categories::create([
+            'name' => $data['name'],
+            'alias' => $data['alias'],
+            'description' => $data['description'],
+            'keyword' => $data['keyword'],
+            'slug' => Str::of($data['name'])->slug('-'),
+            'status' => $data['status']
+        ]);
 
-        return redirect('admin/danh-sach-the-loai');
+        return redirect('admin/danh-sach-the-loai')->with(['success' => 'Created successfully']);
     }
 
     /**
@@ -67,8 +75,8 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        $category = Categories::where('id', $id)->first();
-        return view('admin.categories.show_category',compact('category'));
+        $category = Categories::findOrFail($id);
+        return view('admin.categories.show_category', compact('category'));
     }
 
     /**
@@ -79,8 +87,8 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $category = Categories::where('id', $id)->first();
-        return view('admin.categories.edit_category',compact('category'));
+        $category = Categories::findOrFail($id);
+        return view('admin.categories.edit_category', compact('category'));
     }
 
     /**
@@ -93,7 +101,7 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        $category = Categories::where('id', $id)->first();
+        $category = Categories::findOrFail($id);
 
         if (!$category) {
             return MessageStatus::notFound();
@@ -104,15 +112,21 @@ class CategoriesController extends Controller
             'alias' => ['string', 'nullable'],
             'description' => ['string'],
             'keyword' => ['string'],
-            'slug' => ['string'],
             'status' => ['boolean', 'string']
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return MessageStatus::displayInvalidInput($validator);
         }
-        $category->update($data);
-        return redirect('admin/danh-sach-the-loai');
+        $category->name = isset($data['name']) && $data['name'] ? $data['name'] : $category->name;
+        $category->alias = isset($data['alias']) && $data['alias'] ? $data['alias'] : $category->alias;
+        $category->description = isset($data['description']) && $data['description'] ? $data['description'] : $category->description;
+        $category->keyword = isset($data['keyword']) && $data['keywordkeyword'] ? $data['keyword'] : $category->keyword;
+        $category->slug = Str::of($data['name'])->slug('-');
+        $category->status = isset($data['status']) && $data['status'] ? $data['status'] : $category->status;
+
+        $category->save();
+        return redirect('admin/danh-sach-the-loai')->with(['success' => 'Updated successfully']);
     }
 
     /**
@@ -123,9 +137,15 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $category = Categories::where('id', $id)->first;
+        $category = Categories::findOrFail($id);
 
-        if(!$category) {
+        if (!$category) {
+            return MessageStatus::notFound();
+        }
+
+        $chapter = Story_Categories::where('category_id', $category->id)->first();
+
+        if ($chapter) {
             return MessageStatus::notFound();
         }
 

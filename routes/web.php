@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\StoryController;
 use App\Http\Controllers\admin\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,7 @@ Route::prefix('admin')->middleware(Authenticate::class)->group(function () {
     Route::post('/them-the-loai-moi', [CategoriesController::class,'store']);
     Route::get('/sua-the-loai/{id}', [CategoriesController::class,'edit'])->name('category_edit');
     Route::post('/sua-the-loai/{id}', [CategoriesController::class,'update']);
-    Route::get('/xoa-the-loai{id}', [CategoriesController::class,'destroy'])->name('category_delete');
+    Route::get('/xoa-the-loai/{id}', [CategoriesController::class,'destroy'])->name('category_delete');
     Route::get('/xem-chi-tiet-the-loai/{id}/{slug}',[CategoriesController::class,'show'])->name('category_detail');
 
     // Tac gia
@@ -49,7 +50,7 @@ Route::prefix('admin')->middleware(Authenticate::class)->group(function () {
     Route::post('/them-truyen-moi', [StoryController::class,'store']);
     Route::get('/sua-truyen/{id}', [StoryController::class,'edit']);
     Route::post('/sua-truyen/{id}', [StoryController::class,'update'])->name('story_edit');
-    Route::post('/xoa-truyen/{id}', [StoryController::class,'destroy'])->name('story_delete');
+    Route::get('/xoa-truyen/{id}', [StoryController::class,'destroy'])->name('story_delete');
     Route::get('/xem-chi-tiet-truyen/{id}', [StoryController::class,'show'])->name('story_detail');
 });
 Route::prefix('admin')->group(function () {
@@ -60,7 +61,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/dang-xuat', [AuthController::class, 'signOut']);
 });
 
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+Route::group(['prefix' => 'admin/laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
-
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link');
+});

@@ -4,10 +4,11 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Authors;
+use App\Models\Story_Authors;
 use App\Traits\MessageStatus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthorController extends Controller
 {
@@ -47,7 +48,6 @@ class AuthorController extends Controller
             'alias' => ['string', 'nullable'],
             'description' => ['required', 'string'],
             'keyword' => ['required', 'string'],
-            'slug' => ['required', 'string'],
             'status' => ['boolean', 'string']
         ]);
 
@@ -55,9 +55,16 @@ class AuthorController extends Controller
             return MessageStatus::displayInvalidInput($validator);
         }
 
-        Authors::create($data);
+        Authors::create([
+            'name' => $data['name'],
+            'alias' => $data['alias'],
+            'description' => $data['description'],
+            'keyword' => $data['keyword'],
+            'slug' => Str::of($data['name']),
+            'status' => $data['status']
+        ]);
 
-        return redirect('admin/danh-sach-tac-gia');
+        return redirect('admin/danh-sach-tac-gia')->with(['success' => 'Created successfully']);
     }
 
     /**
@@ -68,7 +75,7 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        $author = Authors::where('id', $id)->first();
+        $author = Authors::findOrFail($id);
         return view('admin.author.show_author',compact('author'));
     }
 
@@ -80,7 +87,7 @@ class AuthorController extends Controller
      */
     public function edit($id)
     {
-        $author = Authors::where('id', $id)->first();
+        $author = Authors::findOrFail($id);
         return view('admin.author.edit_author',compact('author'));
     }
 
@@ -95,13 +102,12 @@ class AuthorController extends Controller
     {
         $data = $request->all();
 
-        $author = Authors::where('id', $id)->first();
+        $author = Authors::findOrFail($id);
         $validator = Validator::make($data, [
             'name' => ['string'],
             'alias' => ['nullable'],
             'description' => ['string'],
             'keyword' => ['string'],
-            'slug' => ['string'],
             'status' => ['boolean', 'string']
         ]);
 
@@ -109,9 +115,15 @@ class AuthorController extends Controller
             return MessageStatus::displayInvalidInput($validator);
         }
 
-        $author->update($data);
+        $author->name = isset($data['name']) && $data['name'] ? $data['name'] : $author->name;
+        $author->alias = isset($data['alias']) && $data['alias'] ? $data['alias'] : $author->alias;
+        $author->description = isset($data['description']) && $data['description'] ? $data['description'] : $author->description;
+        $author->slug = Str::of($data['name'])->slug('-');
+        $author->keyword = isset($data['keyword']) && $data['keyword'] ? $data['keyword'] : $author->keyword;
+        $author->status = isset($data['status']) && $data['status'] ? $data['status'] : $author->status;
+        $author->save();
 
-        return redirect('admin/danh-sach-tac-gia');
+        return redirect('admin/danh-sach-tac-gia')->with(['success' => 'Updated successfully']);
     }
 
     /**
@@ -122,13 +134,19 @@ class AuthorController extends Controller
      */
     public function destroy($id)
     {
-        $author = Authors::where('id', $id)->first;
+        $author = Authors::findOrFail($id);
 
         if(!$author) {
             return MessageStatus::notFound();
         }
 
+        $story = Story_Authors::where('author_id', $author->id)->first();
+
+        if ($story) {
+            return MessageStatus::notFound();
+        }
+
         $author->delete();
-        return redirect()('admin/danh-sach-tac-gia');
+        return redirect()('admin/danh-sach-tac-gia')->with(['success' => 'Deleted successfully']);
     }
 }

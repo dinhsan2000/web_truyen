@@ -31,10 +31,6 @@
                                         <input type="text" name="keyword" value="{{$author->keyword}}" class="form-control" id="exampleInputPassword1">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputPassword1">Slug</label>
-                                        <input type="text" name="slug" value="{{$author->slug}}" class="form-control" id="exampleInputPassword1">
-                                    </div>
-                                    <div class="form-group">
                                         <label for="exampleInputPassword1">Mô tả</label>
                                         <textarea id="summernote" name="description">
                                             {{$author->description}}
@@ -43,7 +39,7 @@
                                     <div class="form-group">
                                         <label>Trạng thái</label>
                                         <select class="form-control" name="status" aria-hidden="true">
-                                            <option value="1" {{$author->slug == 1 ? 'selected' : ''}}">Hiển thị</option>
+                                            <option value="1" {{$author->slug == 1 ? 'selected' : ''}}>Hiển thị</option>
                                             <option value="0">Tạm ẩn</option>
                                         </select>
                                     </div>

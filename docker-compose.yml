@@ -10,6 +10,8 @@ webtruyen:
     - ./docker/nginx-log:/var/log/nginx
     - ./docker/php-fpm/php-fpm.log:/var/log/php-fpm.log
     - ./docker/config/app.conf:/etc/nginx/conf.d/app.conf
+    - ./storage:/var/www/html/storage
+    - ./public/images:/var/www/public/images
   links:
     - mysql
 

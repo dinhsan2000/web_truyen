@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -193,13 +193,13 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="{{url('admin/danh-sach-the-loai')}}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-list nav-icon"></i>
                                             <p>Danh sách thể loại</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="{{url('admin/them-the-loai-moi')}}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-plus nav-icon"></i>
                                             <p>Thêm thể loại mới </p>
                                         </a>
                                     </li>
@@ -207,7 +207,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="fas fa-users"></i>
+                                    <i class="nav-icon fas fa-users"></i>
                                     <p>
                                         Tác giả
                                         <i class="fas fa-angle-left right"></i>
@@ -217,13 +217,13 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="{{url('admin/danh-sach-tac-gia')}}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-list nav-icon"></i>
                                             <p>Danh sách các tác giả</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="{{url('admin/them-tac-gia-moi')}}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-plus nav-icon"></i>
                                             <p>Thêm tác giả mới </p>
                                         </a>
                                     </li>
@@ -231,7 +231,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="fa fa-book"></i>
+                                    <i class="nav-icon fa fa-book"></i>
                                     <p>
                                         Truyện
                                         <i class="fas fa-angle-left right"></i>
@@ -241,13 +241,13 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="{{url('admin/danh-sach-truyen')}}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-list nav-icon"></i>
                                             <p>Danh sách truyện</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="pages/layout/top-nav.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-list nav-icon"></i>
                                             <p>Danh sách chương </p>
                                         </a>
                                     </li>
@@ -255,7 +255,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="fas fa-users"></i>
+                                    <i class="nav-icon fas fa-users"></i>
                                     <p>
                                         Thành viên
                                         <i class="fas fa-angle-left right"></i>
@@ -265,7 +265,7 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="pages/layout/top-nav.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-list nav-icon"></i>
                                             <p>Danh sách thành viên</p>
                                         </a>
                                     </li>
@@ -273,7 +273,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="fas fa-cogs"></i>
+                                    <i class="nav-icon fas fa-cogs"></i>
                                     <p>
                                         Cài đặt
                                         <i class="fas fa-angle-left right"></i>
@@ -283,8 +283,14 @@
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
                                         <a href="pages/layout/top-nav.html" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="fas fa-cogs nav-icon"></i>
                                             <p>Cài đặt hệ thống</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{url('admin/laravel-filemanager')}}" class="nav-link">
+                                            <i class="far fa-file nav-icon"></i>
+                                            <p>Quan ly file</p>
                                         </a>
                                     </li>
                                 </ul>

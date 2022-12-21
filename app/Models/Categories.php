@@ -10,6 +10,10 @@ class Categories extends Model
     use HasFactory;
     protected $fillable = ['name','alias','parent_id','keyword','description','slug','status'];
     protected $table = 'categories';
-    protected $primaryKey = 'id';
+    //protected $primaryKey = 'id';
 
+    public function story_cate()
+    {
+        return $this->hasMany(Categories::class);
+    }
 }

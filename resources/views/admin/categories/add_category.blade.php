@@ -28,17 +28,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Mô tả</label>
-                                        <textarea id="summernote" name="description">
-                                            Mô tả tại đây
-                                          </textarea>
+                                        <textarea id="summernote" name="description"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Từ khoá tìm kiếm</label>
                                         <input type="text" name="keyword" class="form-control" id="exampleInputPassword1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Slug</label>
-                                        <input type="text" name="slug" class="form-control" id="exampleInputPassword1">
                                     </div>
                                     <div class="form-group">
                                         <label>Trạng thái</label>

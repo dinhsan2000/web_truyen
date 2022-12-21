@@ -11,7 +11,7 @@ trait MessageStatus {
      */
     public static function displayInvalidInput($validator)
     {
-        return response()->json(['error' => $validator->errors(), 'message' => 'Invalid input'], 400);
+        return redirect()->back()->with(['error' => 'Display invaild input'], 404);
     }
 
     /**
@@ -21,6 +21,6 @@ trait MessageStatus {
      */
     public static function notFound()
     {
-        return response()->json(['message' => 'Not found'], 404);
+        return redirect()->back()->with(['error' => 'Not found'], 404);
     }
 }
