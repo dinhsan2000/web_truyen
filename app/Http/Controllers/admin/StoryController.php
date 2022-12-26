@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Authors;
 use App\Models\Categories;
 use App\Models\Stories;
-use App\Models\Story_Categories;
 use App\Traits\MessageStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,7 +21,7 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Stories::get();
+        $stories = Stories::all();
         return view('admin.story.story', compact('stories', 'stories'));
     }
 
@@ -33,8 +32,8 @@ class StoryController extends Controller
      */
     public function create()
     {
-        $authors = Authors::where('status', 1)->get();
-        $categories = Categories::where('status', 1)->get();
+        $authors = Authors::all();
+        $categories = Categories::all();
         return view('admin.story.add_story', compact('authors', 'categories'));
     }
 
@@ -46,7 +45,9 @@ class StoryController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->all();
+        logger($data);
 
         $validator = Validator::make($data, [
             'name' => ['required', 'string'],
@@ -57,7 +58,9 @@ class StoryController extends Controller
             'image' => ['required', 'string'],
             'keyword' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'author_id' => ['required', 'integer']
+            'author_id' => ['required', 'integer'],
+            'category_id' => ['required', 'integer'],
+            'publish' => ['required', 'integer']
         ]);
 
         if ($validator->fails()) {
@@ -72,19 +75,14 @@ class StoryController extends Controller
             'image' => $data['image'],
             'keyword' => $data['keyword'],
             'description' => $data['description'],
-            'slug' => Str::of($data['name'])->slug('-'),
+            'slug' => Str::slug($data['name']),
             'user_id' => Auth()->user()->id,
             'author_id' => $data['author_id'],
-            'created_at' => Carbon::now()->format('d-m-Y H:i:s')
+            'category_id' => $data['category_id'],
+            'created_at' => Carbon::now()->format('d-m-Y H:i:s'),
+            'publish' => $data['publish']
         ]);
-
-        if ($story) {
-
-            $story_category = Story_Categories::create([
-                'story_id' => $story->id,
-                'category_id' => $data['category_id']
-            ]);
-        }
+        logger($story);
 
         return redirect('admin/danh-sach-truyen')->with(['success' => 'Created successfully']);
     }
@@ -97,7 +95,7 @@ class StoryController extends Controller
      */
     public function show($id)
     {
-        $story = Stories::findOrFail($id);
+        $story = Stories::find($id);
         return view('admin.story.show_story', compact('story'));
     }
 
@@ -109,8 +107,10 @@ class StoryController extends Controller
      */
     public function edit($id)
     {
-        $story = Stories::findOrFail($id);
-        return view('admin.story.show_story', compact('story'));
+        $story = Stories::find($id);
+        $category = Categories::all();
+        $author = Authors::all();
+        return view('admin.story.edit_story', compact('story', 'category', 'author'));
     }
 
     /**
@@ -124,7 +124,7 @@ class StoryController extends Controller
     {
         $data = $request->all();
 
-        $story = Stories::findOrFail($id);
+        $story = Stories::where('id', $id)->first();
 
         if (!$story) {
             return MessageStatus::notFound();
@@ -140,7 +140,9 @@ class StoryController extends Controller
             'image' => ['string'],
             'keyword' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'author_id' => ['integer']
+            'author_id' => ['integer'],
+            'publish' => ['integer'],
+            'category_id' => ['required', 'integer']
         ]);
 
         if ($validator->fails()) {
@@ -155,24 +157,13 @@ class StoryController extends Controller
         $story->keyword = isset($data['keyword']) && $data['keyword'] ? $data['keyword'] : $story->keyword;
         $story->description = isset($data['description']) && $data['description'] ? $data['description'] : $story->description;
         $story->author_id = isset($data['author_id']) && $data['author_id'] ? $data['author_id'] : $story->author_id;
-        $story->slug = Str::of($data['name'])->slug('-');
+        $story->publish = isset($data['publish']) && $data['publish'] ? $data['publish'] : $story->publish;
+        $story->category_id = isset($data['category_id']) && $data['category_id'] ? $data['category_id'] : $story->category_id;
+        $story->slug = Str::slug($data['name']);
 
         $story->save();
-        if ($story) {
 
-            $story_category = Story_Categories::where('story_id', $story->id)->delete();
-
-            if(!$story_category) {
-                return MessageStatus::notFound();
-            }
-
-            $story_category = Story_Categories::create([
-                'story_id' => $story->id,
-                'category_id' => $data['category_id']
-            ]);
-        }
-
-        return redirect()->route('admin/danh-sach-truyen')->with(['success' => 'Updated successfully']);
+        return redirect('admin/danh-sach-truyen')->with(['success' => 'Updated successfully']);
     }
 
     /**
@@ -183,7 +174,7 @@ class StoryController extends Controller
      */
     public function destroy($id)
     {
-        $story = Stories::findOrFail($id);
+        $story = Stories::find($id);
 
         if (!$story) {
             return MessageStatus::notFound();

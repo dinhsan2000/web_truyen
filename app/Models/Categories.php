@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Stories;
 
 class Categories extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','alias','parent_id','keyword','description','slug','status'];
+    protected $fillable = ['id','name','alias','parent_id','keyword','description','slug','status'];
     protected $table = 'categories';
-    //protected $primaryKey = 'id';
-
-    public function story_cate()
-    {
-        return $this->hasMany(Categories::class);
-    }
+    protected $primaryKey = 'id';
 }

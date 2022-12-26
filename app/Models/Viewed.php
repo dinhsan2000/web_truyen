@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Viewed extends Model
 {
     use HasFactory;
-    protected $fillable = ['story_id','chapter_id','user_id'];
+    protected $fillable = ['id','story_id','chapter_id','user_id'];
     protected $table = 'viewed';
     protected $primaryKey = ['id'];
 }

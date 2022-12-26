@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\MessageStatus;
 use App\Models\Categories;
-use App\Models\Story_Categories;
+use App\Models\Stories;
 use Illuminate\Support\Str;
 
 class CategoriesController extends Controller
@@ -19,7 +19,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Categories::where('status', 1)->get();
+        $categories = Categories::all();
         return view('admin.categories.category', compact('categories'));
     }
 
@@ -60,7 +60,7 @@ class CategoriesController extends Controller
             'alias' => $data['alias'],
             'description' => $data['description'],
             'keyword' => $data['keyword'],
-            'slug' => Str::of($data['name'])->slug('-'),
+            'slug' => Str::slug($data['name']),
             'status' => $data['status']
         ]);
 
@@ -75,7 +75,7 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        $category = Categories::findOrFail($id);
+        $category = Categories::where('id', $id)->first();
         return view('admin.categories.show_category', compact('category'));
     }
 
@@ -87,7 +87,7 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $category = Categories::findOrFail($id);
+        $category = Categories::where('id', $id)->first();
         return view('admin.categories.edit_category', compact('category'));
     }
 
@@ -101,7 +101,7 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        $category = Categories::findOrFail($id);
+        $category = Categories::where('id', $id)->first();
 
         if (!$category) {
             return MessageStatus::notFound();
@@ -121,8 +121,8 @@ class CategoriesController extends Controller
         $category->name = isset($data['name']) && $data['name'] ? $data['name'] : $category->name;
         $category->alias = isset($data['alias']) && $data['alias'] ? $data['alias'] : $category->alias;
         $category->description = isset($data['description']) && $data['description'] ? $data['description'] : $category->description;
-        $category->keyword = isset($data['keyword']) && $data['keywordkeyword'] ? $data['keyword'] : $category->keyword;
-        $category->slug = Str::of($data['name'])->slug('-');
+        $category->keyword = isset($data['keyword']) && $data['keyword'] ? $data['keyword'] : $category->keyword;
+        $category->slug = Str::slug($data['name']);
         $category->status = isset($data['status']) && $data['status'] ? $data['status'] : $category->status;
 
         $category->save();
@@ -137,15 +137,15 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        $category = Categories::findOrFail($id);
+        $category = Categories::where('id', $id)->first();
 
         if (!$category) {
             return MessageStatus::notFound();
         }
 
-        $chapter = Story_Categories::where('category_id', $category->id)->first();
+        $story = Stories::where('category_id', $category->id)->first();
 
-        if ($chapter) {
+        if ($story) {
             return MessageStatus::notFound();
         }
 

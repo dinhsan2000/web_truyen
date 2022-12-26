@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Authors;
+use App\Models\Stories;
 use App\Models\Story_Authors;
 use App\Traits\MessageStatus;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        $authors = Authors::where('status', 1)->get();
+        $authors = Authors::all();
         return view('admin.author.author',compact('authors'));
     }
 
@@ -60,7 +61,7 @@ class AuthorController extends Controller
             'alias' => $data['alias'],
             'description' => $data['description'],
             'keyword' => $data['keyword'],
-            'slug' => Str::of($data['name']),
+            'slug' => Str::slug($data['name']),
             'status' => $data['status']
         ]);
 
@@ -75,7 +76,7 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        $author = Authors::findOrFail($id);
+        $author = Authors::where('id', $id)->first();
         return view('admin.author.show_author',compact('author'));
     }
 
@@ -87,7 +88,7 @@ class AuthorController extends Controller
      */
     public function edit($id)
     {
-        $author = Authors::findOrFail($id);
+        $author = Authors::where('id', $id)->first();
         return view('admin.author.edit_author',compact('author'));
     }
 
@@ -102,7 +103,7 @@ class AuthorController extends Controller
     {
         $data = $request->all();
 
-        $author = Authors::findOrFail($id);
+        $author = Authors::where('id', $id)->first();
         $validator = Validator::make($data, [
             'name' => ['string'],
             'alias' => ['nullable'],
@@ -118,7 +119,7 @@ class AuthorController extends Controller
         $author->name = isset($data['name']) && $data['name'] ? $data['name'] : $author->name;
         $author->alias = isset($data['alias']) && $data['alias'] ? $data['alias'] : $author->alias;
         $author->description = isset($data['description']) && $data['description'] ? $data['description'] : $author->description;
-        $author->slug = Str::of($data['name'])->slug('-');
+        $author->slug = Str::slug($data['name']);
         $author->keyword = isset($data['keyword']) && $data['keyword'] ? $data['keyword'] : $author->keyword;
         $author->status = isset($data['status']) && $data['status'] ? $data['status'] : $author->status;
         $author->save();
@@ -134,15 +135,15 @@ class AuthorController extends Controller
      */
     public function destroy($id)
     {
-        $author = Authors::findOrFail($id);
+        $author = Authors::where('id', $id)->first();
 
         if(!$author) {
             return MessageStatus::notFound();
         }
 
-        $story = Story_Authors::where('author_id', $author->id)->first();
+        $story = Stories::where('author_id', $author->id)->first();
 
-        if ($story) {
+        if($story) {
             return MessageStatus::notFound();
         }
 

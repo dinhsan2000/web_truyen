@@ -51,8 +51,8 @@ return [
             'startup_view' => 'list',
             'max_size'     => 50000, // size in KB
             'thumb' => true,
-            'thumb_width' => 80,
-            'thumb_height' => 80,
+            'thumb_width' => 120,
+            'thumb_height' => 120,
             'valid_mime'   => [
                 'image/jpeg',
                 'image/pjpeg',
@@ -67,8 +67,8 @@ return [
             'startup_view' => 'grid',
             'max_size'     => 50000, // size in KB
             'thumb' => true,
-            'thumb_width' => 80,
-            'thumb_height' => 80,
+            'thumb_width' => 120,
+            'thumb_height' => 120,
             'valid_mime'   => [
                 'image/jpeg',
                 'image/pjpeg',
@@ -94,11 +94,11 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'disk'                     => 'public',
+    'disk'                     => 'mediafiles',
 
     'rename_file'              => false,
 
-    'rename_duplicates'        => false,
+    'rename_duplicates'        => true,
 
     'alphanumeric_filename'    => false,
 
