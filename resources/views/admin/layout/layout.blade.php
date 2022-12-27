@@ -43,8 +43,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
 
@@ -239,17 +238,17 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
+                                    <a href="{{ url('admin/them-truyen-moi') }}" class="nav-link">
+                                        <i class="fas fa-plus nav-icon"></i>
+                                        <p>Thêm truyện mới</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{{ url('admin/danh-sach-truyen') }}" class="nav-link">
                                         <i class="fas fa-list nav-icon"></i>
                                         <p>Danh sách truyện</p>
                                     </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
-                                        <i class="fas fa-list nav-icon"></i>
-                                        <p>Danh sách chương </p>
-                                    </a>
-                                </li>
+                                </li>>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -289,7 +288,7 @@
                                 <li class="nav-item">
                                     <a href="{{ url('admin/laravel-filemanager') }}" class="nav-link">
                                         <i class="far fa-file nav-icon"></i>
-                                        <p>Quan ly file</p>
+                                        <p>Quản lý file</p>
                                     </a>
                                 </li>
                             </ul>

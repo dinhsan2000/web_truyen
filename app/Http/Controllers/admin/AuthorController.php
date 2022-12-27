@@ -5,11 +5,11 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Authors;
 use App\Models\Stories;
-use App\Models\Story_Authors;
 use App\Traits\MessageStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AuthorController extends Controller
 {
@@ -45,7 +45,7 @@ class AuthorController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'unique:authors'],
             'alias' => ['string', 'nullable'],
             'description' => ['required', 'string'],
             'keyword' => ['required', 'string'],
@@ -104,8 +104,13 @@ class AuthorController extends Controller
         $data = $request->all();
 
         $author = Authors::where('id', $id)->first();
+
+        if (!$author) {
+            return MessageStatus::notFound();
+        }
+
         $validator = Validator::make($data, [
-            'name' => ['string'],
+            'name' => ['string', Rule::unique('categories', 'name')->ignore($author->id)],
             'alias' => ['nullable'],
             'description' => ['string'],
             'keyword' => ['string'],

@@ -53,17 +53,20 @@
                                 <h3 class="card-title">Chuyên mục</h3>
                             </div>
                             <div class="card-body">
-                                <div class="form-group">
-                                    <!-- checkbox -->
-                                    <label>Trạng thái</label>
-                                    <select name="category_id" class="form-control" aria-hidden="true">
-                                        @foreach ($categories as $cate)
-                                        <option value="{{$cate->id}}">{{$cate->name}}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="row">
+                                    @foreach ($categories as $cate)
+                                    <div class="col-sm-6">
+                                        <!-- checkbox -->
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <input class="form-check-input" value="{{$cate->id}}"
+                                                    name="category_id[]" type="checkbox">
+                                                <label class="form-check-label">{{ $cate->name }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                 </div>
-
-
                             </div>
                         </div>
                     </div>

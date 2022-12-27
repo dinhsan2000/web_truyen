@@ -55,14 +55,12 @@
                                     <p><i class="fas fa-calendar-day" style="margin-right: 3px;"></i>
                                         Sửa lúc: <b>{{ $story->updated_at->format('d-m-Y H:i:s') }}</b></p>
                                     <p><i class="fas fa-list nav-icon" style="margin-right: 3px;"></i>
-                                        Số tập: <b>123</b></p>
-                                        <div class="card-footer">
-                                    <a href="{{ route('story_delete', ['id' => $story->id]) }}"
-                                        class="btn btn-outline-danger btn-xs">Chương <i class="fas fa-list nav-icon"></i></a>
+                                        Số tập: <b>{{$story->chapters_count}}</b></p>
+                                        <div class="card-footer text-center">
+                                    <a href="{{ route('admin_chapter', ['id' => $story->id]) }}"
+                                        class="btn btn-outline-success btn-xs">Chương <i class="fas fa-list nav-icon"></i></a>
                                     <a href="{{ route('story_edit', ['id' => $story->id]) }}"
                                         class="btn btn-outline-warning btn-xs">Sửa <i class="fas fa-edit nav-icon"></i></a>
-                                    <a href="{{ route('story_detail', ['id' => $story->id]) }}"
-                                        class="btn btn-outline-success btn-xs">Xem <i class="fas fa-eye nav-icon"></i></a>
                                     <a href="{{ route('story_delete', ['id' => $story->id]) }}"
                                         class="btn btn-outline-danger btn-xs">Xoá <i class="fas fa-trash nav-icon"></i></a>
                                         </div>

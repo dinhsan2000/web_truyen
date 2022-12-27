@@ -9,6 +9,7 @@ use App\Traits\MessageStatus;
 use App\Models\Categories;
 use App\Models\Stories;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class CategoriesController extends Controller
 {
@@ -44,7 +45,7 @@ class CategoriesController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string','unique:categories'],
             'alias' => ['string', 'nullable'],
             'description' => ['required', 'string'],
             'keyword' => ['required', 'string'],
@@ -108,7 +109,7 @@ class CategoriesController extends Controller
         }
 
         $validator = Validator::make($data, [
-            'name' => ['string'],
+            'name' => ['string', Rule::unique('authors', 'name')->ignore($category->id)],
             'alias' => ['string', 'nullable'],
             'description' => ['string'],
             'keyword' => ['string'],

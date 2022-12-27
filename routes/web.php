@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\CategoriesController;
 use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\StoryController;
 use App\Http\Controllers\admin\AuthController;
+use App\Http\Controllers\admin\ChapterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Artisan;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Artisan;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::prefix('admin')->middleware(Authenticate::class)->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/trang-chu', [HomeController::class,'index'])->name('admin.home');
 
     // The loai
@@ -33,7 +34,7 @@ Route::prefix('admin')->middleware(Authenticate::class)->group(function () {
     Route::get('/sua-the-loai/{id}', [CategoriesController::class,'edit'])->name('category_edit');
     Route::post('/sua-the-loai/{id}', [CategoriesController::class,'update']);
     Route::get('/xoa-the-loai/{id}', [CategoriesController::class,'destroy'])->name('category_delete');
-    Route::get('/xem-chi-tiet-the-loai/{id}/{slug}',[CategoriesController::class,'show'])->name('category_detail');
+    Route::get('/xem-chi-tiet-the-loai/{id}',[CategoriesController::class,'show'])->name('category_detail');
 
     // Tac gia
     Route::get('/danh-sach-tac-gia', [AuthorController::class,'index'])->name('admin.author');
@@ -51,7 +52,13 @@ Route::prefix('admin')->middleware(Authenticate::class)->group(function () {
     Route::get('/sua-truyen/{id}', [StoryController::class,'edit']);
     Route::post('/sua-truyen/{id}', [StoryController::class,'update'])->name('story_edit');
     Route::get('/xoa-truyen/{id}', [StoryController::class,'destroy'])->name('story_delete');
-    Route::get('/xem-chi-tiet-truyen/{id}', [StoryController::class,'show'])->name('story_detail');
+
+    // Chuong truyen
+    Route::get('/chuong-truyen/{id}', [ChapterController::class, 'index'])->name('admin_chapter');
+    Route::get('/them-chuong-truyen-moi/{id}', [ChapterController::class, 'create']);
+    Route::post('/them-chuong-truyen-moi/{id}', [ChapterController::class, 'store'])->name('chapter_add');
+    Route::get('/sua-chuong-truyen/{id}', [ChapterController::class, 'edit']);
+    Route::post('/sua-chuong-truyen/{id}', [ChapterController::class, 'update'])->name('chapter_edit');
 });
 Route::prefix('admin')->group(function () {
     Route::get('/dang-ki', [AuthController::class, 'register'])->name('admin.register');

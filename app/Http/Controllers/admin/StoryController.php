@@ -5,12 +5,14 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Authors;
 use App\Models\Categories;
+use App\Models\Chapters;
 use App\Models\Stories;
 use App\Traits\MessageStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class StoryController extends Controller
 {
@@ -21,7 +23,7 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Stories::all();
+        $stories = Stories::withCount('chapters')->get();
         return view('admin.story.story', compact('stories', 'stories'));
     }
 
@@ -47,7 +49,6 @@ class StoryController extends Controller
     {
 
         $data = $request->all();
-        logger($data);
 
         $validator = Validator::make($data, [
             'name' => ['required', 'string'],
@@ -82,7 +83,6 @@ class StoryController extends Controller
             'created_at' => Carbon::now()->format('d-m-Y H:i:s'),
             'publish' => $data['publish']
         ]);
-        logger($story);
 
         return redirect('admin/danh-sach-truyen')->with(['success' => 'Created successfully']);
     }
@@ -131,7 +131,7 @@ class StoryController extends Controller
         }
 
         $validator = Validator::make($data, [
-            'name' => ['string'],
+            'name' => ['string', Rule::unique('stories', 'name')->ignore($story->id)],
             'alias' => ['string'],
             'content' => ['string'],
             'view' => ['nullable', 'string'],
@@ -142,7 +142,7 @@ class StoryController extends Controller
             'description' => ['nullable', 'string'],
             'author_id' => ['integer'],
             'publish' => ['integer'],
-            'category_id' => ['required', 'integer']
+            'category_id' => ['integer']
         ]);
 
         if ($validator->fails()) {

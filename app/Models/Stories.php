@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Categories;
 use App\Models\Authors;
+use App\Models\Chapters;
+
 class Stories extends Model
 {
     use HasFactory;
@@ -18,10 +20,6 @@ class Stories extends Model
         return $this->belongsTo(Authors::class, 'author_id');
     }
 
-    public function story_cate() {
-        return $this->hasMany(Story_Categories::class,'story_id','id');
-    }
-
     public function categories()
     {
         return $this->belongsTo(Categories::class, 'category_id');
@@ -29,5 +27,10 @@ class Stories extends Model
 
     public function users() {
         return $this->hasOne(User::class,'id','user_id');
+    }
+
+    public function chapters()
+    {
+        return $this->hasMany(Chapters::class, 'story_id', 'id');
     }
 }
